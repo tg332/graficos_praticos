@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Barras </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            width: 800px; 
+            height: 400px; 
+            margin: auto;
+            display: block;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 24px;
+            color: #333;
+        }
+        .chart-container {
+            margin-top: 20px;
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .controls input {
+            width: 60px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gráfico de Barras</h1>
+
+    <div class="chart-container">
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="controls">
+        <label for="jan">1:</label>
+        <input type="number" id="jan" value="1200" onchange="updateChart()">
+        <label for="feb">2:</label>
+        <input type="number" id="feb" value="1700" onchange="updateChart()">
+        <label for="mar">3:</label>
+        <input type="number" id="mar" value="1500" onchange="updateChart()">
+        <label for="apr">4:</label>
+        <input type="number" id="apr" value="1900" onchange="updateChart()">
+        <label for="may">5:</label>
+        <input type="number" id="may" value="2200" onchange="updateChart()">
+    </div>
+
+    <script>
+        var ctx = document.getElementById('barChart').getContext('2d');
+
+        var salesData = {
+            labels: ['1', '2', '3', '4', '5'],
+            datasets: [{
+                
+                data: [1200, 1700, 1500, 1900, 2200],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)', 
+                borderColor: 'rgba(54, 162, 235, 1)', 
+                borderWidth: 1
+            }]
+        };
+
+        var options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeInOutQuad'
+            }
+        };
+
+        var barChart = new Chart(ctx, {
+            type: 'bar',
+            data: salesData,
+            options: options
+        });
+
+        function updateChart() {
+            var jan = document.getElementById('jan').value;
+            var feb = document.getElementById('feb').value;
+            var mar = document.getElementById('mar').value;
+            var apr = document.getElementById('apr').value;
+            var may = document.getElementById('may').value;
+
+            barChart.data.datasets[0].data = [jan, feb, mar, apr, may];
+            barChart.update();
+        }
+    </script>
+</body>
+</html>

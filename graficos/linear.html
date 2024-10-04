@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico Linear </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #grafico {
+            max-width: 1200px;
+            height: 600px;
+            margin: 20px auto;
+
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" id="nomeDado" placeholder="Nome do Dado">
+        <input type="number" id="valorDado" placeholder="Valor do Dado">
+        <button onclick="adicionarDado()">Adicionar Dado</button>
+    </div>
+
+    <canvas id="grafico"></canvas>
+
+    <script>
+        let dados = {
+            labels: [],
+            datasets: [{
+                label: 'Dados',
+                data: [],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        };
+
+        const configuracoes = {
+            type: 'line',
+            data: dados,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        const graficoCtx = document.getElementById('grafico').getContext('2d');
+        const meuGrafico = new Chart(graficoCtx, configuracoes);
+
+        function adicionarDado() {
+            const nomeDado = document.getElementById('nomeDado').value.trim();
+            const valorDado = document.getElementById('valorDado').value.trim();
+
+            if (nomeDado !== '' && valorDado !== '') {
+                dados.labels.push(nomeDado);
+                dados.datasets[0].data.push(Number(valorDado));
+
+                meuGrafico.update();
+            }
+
+            document.getElementById('nomeDado').value = '';
+            document.getElementById('valorDado').value = '';
+        }
+    </script>
+</body>
+</html>

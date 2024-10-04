@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Função de 1º Grau</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            margin: 20px auto;
+            width: 850px;
+        }
+
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 400px;
+            font-size: 16px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <canvas id="graphCanvas" width="800" height="600"></canvas>
+        
+        <div class="controls">
+            <label for="equationInput">Digite a função (ex: y = 2x + 3):</label>
+            <input type="text" id="equationInput" placeholder="y = ax + b">
+            <div id="errorMessage" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+            const equationInput = document.getElementById('equationInput');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Função para desenhar o gráfico
+            function drawGraph(a, b) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpar canvas
+
+                // Desenhar eixos
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height / 2);
+                ctx.lineTo(canvas.width, canvas.height / 2);
+                ctx.moveTo(canvas.width / 2, 0);
+                ctx.lineTo(canvas.width / 2, canvas.height);
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+
+                // Desenhar função y = ax + b
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height / 2 - (a * -canvas.width / 2 + b * 20));
+                for (let x = -canvas.width / 2; x <= canvas.width / 2; x += 1) {
+                    let y = a * x + b * 20;
+                    ctx.lineTo(x + canvas.width / 2, canvas.height / 2 - y);
+                }
+                ctx.strokeStyle = 'red';
+                ctx.stroke();
+            }
+
+            // Função para processar a equação inserida
+            function parseEquation(equation) {
+                const regex = /^y\s*=\s*([+-]?\d*\.?\d*)x\s*([+-]\s*\d+\.?\d*)?$/i;
+                const match = equation.match(regex);
+                
+                if (match) {
+                    let a = parseFloat(match[1]);
+                    let b = match[2] ? parseFloat(match[2].replace(/\s+/g, '')) : 0;
+
+                    if (isNaN(a)) a = 1; // Se o coeficiente de x for omitido, assuma que é 1
+                    return { a, b };
+                } else {
+                    return null;
+                }
+            }
+
+            // Função para atualizar o gráfico e exibir erros
+            function updateGraph() {
+                const equation = equationInput.value;
+                const parsed = parseEquation(equation);
+                
+                if (parsed) {
+                    errorMessage.textContent = '';
+                    drawGraph(parsed.a, parsed.b);
+                } else {
+                    errorMessage.textContent = 'Por favor, insira uma função válida no formato y = ax + b.';
+                }
+            }
+
+            // Adicionar evento ao campo de entrada de texto
+            equationInput.addEventListener('input', updateGraph);
+
+            // Inicializar com um valor padrão
+            equationInput.value = 'y = 1x + 0';
+            updateGraph();
+        };
+    </script>
+</body>
+</html>
